@@ -1,36 +1,92 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Cannabis Ops
+
+Internal staff operations tool for a cannabis retail shop in Cape Town, South Africa. Built for iPad/tablet in-store use — touch-first, large tap targets, readable at a glance.
+
+> **Not customer-facing.** Internal staff use only.
+
+## Tech Stack
+
+- [Next.js 14](https://nextjs.org/) — App Router, server components by default
+- [Supabase](https://supabase.com/) — Postgres, Auth, Realtime
+- [shadcn/ui](https://ui.shadcn.com/) + [Tailwind CSS](https://tailwindcss.com/) — UI components
+- [Recharts](https://recharts.org/) — Data visualisation (Phase 2+)
+- [Vercel](https://vercel.com/) — Deployment
 
 ## Getting Started
 
-First, run the development server:
+### 1. Clone and install
+
+```bash
+git clone https://github.com/JuanGaljoen/canna-flow.git
+cd canna-flow
+npm install
+```
+
+### 2. Configure environment variables
+
+```bash
+cp .env.local.example .env.local
+```
+
+Fill in `.env.local` with your Supabase project credentials and API keys.
+
+### 3. Run the dev server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+app/
+  (dashboard)/
+    checklists/       # Morning/evening shift checklists
+    products/         # Product catalogue and stock levels
+components/
+  layout/             # Sidebar, nav, shell components
+  checklists/         # Checklist-specific components
+  products/           # Product-specific components
+  ui/                 # shadcn/ui primitives (auto-generated)
+lib/
+  supabase/
+    server.ts         # Server-side Supabase client (SSR)
+    client.ts         # Browser client (realtime subscriptions only)
+  actions/            # Server actions by module
+hooks/                # Custom React hooks
+types/
+  database.ts         # TypeScript types matching DB schema
+```
 
-## Learn More
+## Code Conventions
 
-To learn more about Next.js, take a look at the following resources:
+- All pages are **server components** by default — add `'use client'` only when needed
+- Server actions live in `lib/actions/[module].ts`
+- Types live in `types/[module].ts`
+- Use the **server client** for all server-side Supabase queries
+- Use the **browser client** only for realtime subscriptions
+- **shadcn/ui throughout** — no custom components from scratch if shadcn covers it
+- **Tailwind only** — no CSS modules or styled-components
+- All monetary values stored in **cents (ZAR)** — display as `R 1,234.50`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Phase Roadmap
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+| Phase | Scope |
+|-------|-------|
+| **1 — MVP** | Scaffold · Supabase · Layout · Checklists · Products |
+| **2** | Yoco sales dashboard |
+| **3** | Walk-in counter (Raspberry Pi / ESP32 sensor) |
+| **4** | Reporting · Exports · Multi-shop support |
 
-## Deploy on Vercel
+## External Integrations
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Yoco (Payment Processor)
+- Webhook endpoint: `POST /api/yoco/webhook`
+- Event: `payment.succeeded`
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Walk-in Sensor *(Phase 3)*
+- Hardware: Raspberry Pi or ESP32 with PIR/IR beam-break sensor
+- Endpoint: `POST /api/walkin` — body `{ count: 1 }`
+- Auth: `X-Sensor-Key` header (`SENSOR_SECRET`)
