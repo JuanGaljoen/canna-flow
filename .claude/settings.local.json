@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cp /Users/juanviljoen/projects/canna-flow/CLAUDE.md /tmp/CLAUDE.md)",
+      "Bash(npx create-next-app@14 . --typescript --tailwind --eslint --app --no-src-dir --import-alias \"@/*\" --no-git --yes)",
+      "Bash(cp -r /Users/juanviljoen/projects/canna-flow/.claude /tmp/.claude_backup)",
+      "Bash(mv /Users/juanviljoen/projects/canna-flow/CLAUDE.md /tmp/CLAUDE.md)",
+      "Bash(mv /Users/juanviljoen/projects/canna-flow/.claude /tmp/.claude_temp)"
+    ]
+  }
+}
