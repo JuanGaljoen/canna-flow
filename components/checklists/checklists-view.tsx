@@ -38,11 +38,17 @@ export function ChecklistsView({ checklists, history }: Props) {
 
       {/* Morning / Evening tabs */}
       <Tabs defaultValue="morning">
-        <TabsList className="h-12 w-full sm:w-auto">
-          <TabsTrigger value="morning" className="flex-1 sm:flex-none px-8 h-10 text-base">
+        <TabsList className="h-11 bg-muted p-1 rounded-lg">
+          <TabsTrigger
+            value="morning"
+            className="px-8 h-9 rounded-md text-sm font-medium data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-foreground"
+          >
             Morning
           </TabsTrigger>
-          <TabsTrigger value="evening" className="flex-1 sm:flex-none px-8 h-10 text-base">
+          <TabsTrigger
+            value="evening"
+            className="px-8 h-9 rounded-md text-sm font-medium data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-foreground"
+          >
             Evening
           </TabsTrigger>
         </TabsList>

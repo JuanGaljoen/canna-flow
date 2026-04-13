@@ -1,6 +1,6 @@
 'use client'
 
-import { useTransition } from 'react'
+import { useOptimistic, useTransition } from 'react'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Progress } from '@/components/ui/progress'
@@ -25,11 +25,32 @@ function formatTime(ts: string) {
   })
 }
 
+type OptimisticAction = { itemId: string; action: 'add' | 'remove' }
+
 export function ChecklistCard({ checklistId, title, items, completions, managerView }: Props) {
   const [isPending, startTransition] = useTransition()
 
-  const completionMap = new Map(completions.map((c) => [c.checklist_item_id, c]))
-  const completed = completions.length
+  const [optimisticCompletions, addOptimistic] = useOptimistic(
+    completions,
+    (current: ChecklistCompletion[], { itemId, action }: OptimisticAction) => {
+      if (action === 'remove') {
+        return current.filter((c) => c.checklist_item_id !== itemId)
+      }
+      return [
+        ...current,
+        {
+          id: `optimistic-${itemId}`,
+          checklist_item_id: itemId,
+          staff_id: '',
+          completed_at: new Date().toISOString(),
+          completed_date: new Date().toISOString().slice(0, 10),
+        },
+      ]
+    }
+  )
+
+  const completionMap = new Map(optimisticCompletions.map((c) => [c.checklist_item_id, c]))
+  const completed = optimisticCompletions.length
   const total = items.length
   const pct = total > 0 ? Math.round((completed / total) * 100) : 0
   const allDone = pct === 100
@@ -40,7 +61,11 @@ export function ChecklistCard({ checklistId, title, items, completions, managerV
       alert('Select a staff member in the header first.')
       return
     }
-    startTransition(() => toggleCompletion(itemId, staffId))
+    const isChecked = completionMap.has(itemId)
+    startTransition(async () => {
+      addOptimistic({ itemId, action: isChecked ? 'remove' : 'add' })
+      await toggleCompletion(itemId, staffId)
+    })
   }
 
   return (
@@ -65,6 +90,7 @@ export function ChecklistCard({ checklistId, title, items, completions, managerV
         {items.map((item) => {
           const completion = completionMap.get(item.id)
           const isChecked = !!completion
+          const isOptimistic = completion?.id?.startsWith('optimistic-')
 
           return (
             <div
@@ -76,10 +102,8 @@ export function ChecklistCard({ checklistId, title, items, completions, managerV
               <Checkbox
                 id={item.id}
                 checked={isChecked}
-                onCheckedChange={() => handleToggle(item.id)}
-                disabled={isPending}
-                className="h-6 w-6 shrink-0"
-                onClick={(e) => e.stopPropagation()}
+                disabled={isPending && isOptimistic}
+                className="h-6 w-6 shrink-0 pointer-events-none"
               />
               <span
                 className={`flex-1 text-sm leading-snug select-none
@@ -88,12 +112,12 @@ export function ChecklistCard({ checklistId, title, items, completions, managerV
                 {item.task}
               </span>
 
-              {isChecked && managerView && completion && (
+              {isChecked && !isOptimistic && managerView && completion && (
                 <span className="text-xs text-gray-400 whitespace-nowrap">
                   {completion.staff?.name} · {formatTime(completion.completed_at)}
                 </span>
               )}
-              {isChecked && !managerView && (
+              {isChecked && !isOptimistic && !managerView && (
                 <span className="text-xs text-gray-400 whitespace-nowrap">
                   {formatTime(completion!.completed_at)}
                 </span>
