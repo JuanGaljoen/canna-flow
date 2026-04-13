@@ -49,8 +49,7 @@ All prices and sales amounts stored in cents (ZAR). Always display divided by 10
 ## Phase Roadmap
 - Phase 1 (MVP): Scaffold + Supabase + Layout + Checklists + Products
 - Phase 2: Yoco sales dashboard
-- Phase 3: Walk-in counter (hardware sensor integration)
-- Phase 4: Reporting, exports, multi-shop support
+- Phase 3: Reporting, exports, multi-shop support
 
 ## Code Conventions
 - Server actions in lib/actions/[module].ts
