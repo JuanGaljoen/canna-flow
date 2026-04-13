@@ -6,11 +6,10 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue,
 } from '@/components/ui/select'
+import { User } from 'lucide-react'
 import type { Staff } from '@/types/database'
 
-// Key used across the app to read the active staff member
 export const STAFF_STORAGE_KEY = 'canna_ops_staff_id'
 
 function formatDate(date: Date) {
@@ -34,7 +33,6 @@ export function Header({ staff }: { staff: Staff[] }) {
   const [now, setNow] = useState<Date | null>(null)
   const [selectedStaffId, setSelectedStaffId] = useState<string>('')
 
-  // Avoid hydration mismatch — set time only on client
   useEffect(() => {
     setNow(new Date())
     const stored = localStorage.getItem(STAFF_STORAGE_KEY)
@@ -48,6 +46,8 @@ export function Header({ staff }: { staff: Staff[] }) {
     setSelectedStaffId(value)
     localStorage.setItem(STAFF_STORAGE_KEY, value)
   }
+
+  const selectedStaff = staff.find((m) => m.id === selectedStaffId)
 
   return (
     <header className="h-16 border-b border-gray-200 bg-white flex items-center justify-between px-6 shrink-0">
@@ -64,18 +64,23 @@ export function Header({ staff }: { staff: Staff[] }) {
         )}
       </div>
 
-      {/* Staff selector */}
+      {/* Staff selector — render name manually to avoid SelectValue showing UUID */}
       <Select value={selectedStaffId} onValueChange={handleSelect}>
-        <SelectTrigger className="w-52 h-11">
-          <SelectValue placeholder="Select staff member…" />
+        <SelectTrigger className="w-52 h-11 gap-2">
+          <User className="h-4 w-4 text-muted-foreground shrink-0" />
+          {selectedStaff ? (
+            <span className="font-medium truncate">{selectedStaff.name}</span>
+          ) : (
+            <span className="text-muted-foreground">Select staff…</span>
+          )}
         </SelectTrigger>
         <SelectContent>
           {staff.map((member) => (
             <SelectItem key={member.id} value={member.id} className="py-3">
-              <span className="font-medium">{member.name}</span>
-              <span className="ml-2 text-xs text-muted-foreground capitalize">
-                {member.role}
-              </span>
+              <div className="flex flex-col">
+                <span className="font-medium">{member.name}</span>
+                <span className="text-xs text-muted-foreground capitalize">{member.role}</span>
+              </div>
             </SelectItem>
           ))}
         </SelectContent>

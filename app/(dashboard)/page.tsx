@@ -1,9 +1,10 @@
 import { createAdminClient } from '@/lib/supabase/admin'
 import { getCompletionsForToday } from '@/lib/actions/checklists'
-import { ChecklistCard } from '@/components/checklists/checklist-card'
 import { StatCard } from '@/components/dashboard/stat-card'
 import { RefreshButton } from '@/components/dashboard/refresh-button'
 import { LowStockCard } from '@/components/dashboard/low-stock-card'
+import { ShiftSummary } from '@/components/dashboard/shift-summary'
+import { Users, Sun, Moon } from 'lucide-react'
 import type { ChecklistWithCompletions } from '@/types/checklists'
 import type { Product } from '@/types/products'
 
@@ -64,12 +65,11 @@ export default async function DashboardPage() {
   const morning = checklistsWithCompletions.find((c) => c.shift === 'morning')
   const evening = checklistsWithCompletions.find((c) => c.shift === 'evening')
   const activeChecklist = checklistsWithCompletions.find((c) => c.shift === shift)
-
   const shiftLabel = shift === 'morning' ? 'Morning Shift' : 'Evening Shift'
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+      {/* Page header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold">Dashboard</h1>
@@ -88,18 +88,21 @@ export default async function DashboardPage() {
           label="Walk-ins Today"
           value="—"
           note="Sensor coming in Phase 3"
+          icon={Users}
         />
         <StatCard
           label="Morning Checklist"
           value={`${pct(morning)}%`}
           note={`${morning?.completions.length ?? 0} of ${morning?.items.length ?? 0} tasks done`}
           highlight={pct(morning) === 100}
+          icon={Sun}
         />
         <StatCard
           label="Evening Checklist"
           value={`${pct(evening)}%`}
           note={`${evening?.completions.length ?? 0} of ${evening?.items.length ?? 0} tasks done`}
           highlight={pct(evening) === 100}
+          icon={Moon}
         />
       </div>
 
@@ -107,7 +110,7 @@ export default async function DashboardPage() {
       {lowStock.length > 0 && (
         <div className="space-y-3">
           <h2 className="text-xs font-semibold uppercase tracking-wide text-destructive">
-            Low Stock Alert · {lowStock.length} product{lowStock.length > 1 ? 's' : ''}
+            Low Stock · {lowStock.length} product{lowStock.length > 1 ? 's' : ''}
           </h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
             {lowStock.map((product) => (
@@ -117,19 +120,13 @@ export default async function DashboardPage() {
         </div>
       )}
 
-      {/* Active shift checklist widget */}
+      {/* Active shift summary */}
       {activeChecklist && (
         <div className="space-y-3">
           <h2 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-            {shiftLabel} · Quick Checklist
+            Active Shift
           </h2>
-          <ChecklistCard
-            checklistId={activeChecklist.id}
-            title={activeChecklist.title}
-            items={activeChecklist.items}
-            completions={activeChecklist.completions}
-            managerView={false}
-          />
+          <ShiftSummary checklist={activeChecklist} shiftLabel={shiftLabel} />
         </div>
       )}
     </div>
