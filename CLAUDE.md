@@ -21,7 +21,6 @@ iPad / tablet in-store. Design for touch-first, large tap targets, readable at a
 - checklist_items (id, checklist_id, task)
 - checklist_completions (id, checklist_item_id, staff_id, completed_at)
 - products (id, name, category, thc_percent, cbd_percent, price_cents, stock_level)
-- walk_ins (id, timestamp, count) — Phase 3
 - sales (id, yoco_payment_id, amount_cents, currency, created_at)
 
 ## Monetary Values
@@ -41,10 +40,6 @@ All prices and sales amounts stored in cents (ZAR). Always display divided by 10
 - Webhook event: payment.succeeded
 - Webhook endpoint: /api/yoco/webhook
 
-### Walk-in Sensor (Phase 3)
-- Raspberry Pi or ESP32 with PIR/IR beam-break sensor
-- POSTs to /api/walkin with { count: 1 }
-- Authenticated via X-Sensor-Key header (SENSOR_SECRET)
 
 ## Phase Roadmap
 - Phase 1 (MVP): Scaffold + Supabase + Layout + Checklists + Products
