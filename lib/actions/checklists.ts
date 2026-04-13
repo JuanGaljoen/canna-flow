@@ -80,6 +80,7 @@ export async function toggleCompletion(
   }
 
   revalidatePath('/checklists')
+  revalidatePath('/')
 }
 
 /** Last N days of completion history grouped by date and shift */
