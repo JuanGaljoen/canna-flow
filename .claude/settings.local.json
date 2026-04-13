@@ -7,7 +7,8 @@
       "Bash(mv /Users/juanviljoen/projects/canna-flow/CLAUDE.md /tmp/CLAUDE.md)",
       "Bash(mv /Users/juanviljoen/projects/canna-flow/.claude /tmp/.claude_temp)",
       "Bash(npm install:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(grep:*)"
     ]
   }
 }

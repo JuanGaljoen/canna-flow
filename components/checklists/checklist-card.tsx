@@ -1,6 +1,7 @@
 'use client'
 
 import { useOptimistic, useTransition } from 'react'
+import { toast } from 'sonner'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Progress } from '@/components/ui/progress'
@@ -58,13 +59,17 @@ export function ChecklistCard({ checklistId, title, items, completions, managerV
   function handleToggle(itemId: string) {
     const staffId = localStorage.getItem(STAFF_STORAGE_KEY)
     if (!staffId) {
-      alert('Select a staff member in the header first.')
+      toast.warning('Select a staff member in the header first.')
       return
     }
     const isChecked = completionMap.has(itemId)
     startTransition(async () => {
       addOptimistic({ itemId, action: isChecked ? 'remove' : 'add' })
-      await toggleCompletion(itemId, staffId)
+      try {
+        await toggleCompletion(itemId, staffId)
+      } catch {
+        toast.error('Failed to save. Please try again.')
+      }
     })
   }
 

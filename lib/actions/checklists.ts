@@ -65,18 +65,20 @@ export async function toggleCompletion(
     .maybeSingle()
 
   if (existing) {
-    await supabase
+    const { error } = await supabase
       .from('checklist_completions')
       .delete()
       .eq('id', existing.id)
+    if (error) throw new Error(error.message)
   } else {
-    await supabase
+    const { error } = await supabase
       .from('checklist_completions')
       .insert({
         checklist_item_id: checklistItemId,
         staff_id: staffId,
         completed_date: today,
       })
+    if (error) throw new Error(error.message)
   }
 
   revalidatePath('/checklists')

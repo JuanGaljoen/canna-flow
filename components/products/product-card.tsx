@@ -57,7 +57,10 @@ export function ProductCard({ product, onEdit }: Props) {
   return (
     <Card
       className="cursor-pointer hover:shadow-md transition-shadow active:scale-[0.99]"
+      role="button"
+      tabIndex={0}
       onClick={() => onEdit(product)}
+      onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && onEdit(product)}
     >
       <CardContent className="p-4 space-y-3">
         {/* Name + category */}
