@@ -25,6 +25,7 @@ export interface ChecklistCompletion {
   checklist_item_id: string
   staff_id: string
   completed_at: string
+  completed_date: string
 }
 
 export interface Product {
