@@ -12,21 +12,24 @@ interface Props {
 
 export function StatCard({ label, value, note, highlight, icon: Icon }: Props) {
   return (
-    <Card className={cn('transition-colors', highlight && 'border-green-400 bg-green-50/50')}>
+    <Card className={cn(
+      'transition-colors',
+      highlight && 'bg-emerald-50/40'
+    )}>
       <CardContent className="p-5">
         <div className="flex items-start justify-between">
-          <div className="space-y-1">
-            <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+          <div className="space-y-1.5">
+            <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
               {label}
             </p>
-            <p className={cn('text-3xl font-bold', highlight && 'text-green-600')}>
+            <p className={cn('text-3xl font-bold tracking-tight', highlight ? 'text-emerald-700' : 'text-foreground')}>
               {value}
             </p>
             {note && <p className="text-xs text-muted-foreground">{note}</p>}
           </div>
           <div className={cn(
-            'p-2 rounded-lg',
-            highlight ? 'bg-green-100 text-green-600' : 'bg-muted text-muted-foreground'
+            'p-2.5 rounded-xl',
+            highlight ? 'bg-emerald-100 text-emerald-600' : 'bg-muted text-muted-foreground'
           )}>
             <Icon className="h-5 w-5" />
           </div>

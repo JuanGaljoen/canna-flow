@@ -51,8 +51,8 @@ export function ProductsView({ products }: { products: Product[] }) {
     <div className="space-y-6">
       {/* Page header */}
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold">Products</h1>
-        <Button onClick={openAdd} className="h-11 gap-2">
+        <h1 className="text-2xl font-semibold tracking-tight">Products</h1>
+        <Button onClick={openAdd} className="h-11 gap-2 bg-primary hover:bg-primary/90 text-primary-foreground">
           <Plus className="h-4 w-4" />
           Add product
         </Button>

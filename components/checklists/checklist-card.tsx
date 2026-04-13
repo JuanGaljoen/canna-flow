@@ -69,20 +69,20 @@ export function ChecklistCard({ checklistId, title, items, completions, managerV
   }
 
   return (
-    <Card className={allDone ? 'border-green-400' : ''}>
+    <Card className={allDone ? 'bg-emerald-50/30' : ''}>
       <CardHeader className="pb-2 pt-4 px-5">
         <div className="flex items-center justify-between mb-2">
           <span className="font-semibold text-base">{title}</span>
           <Badge
             variant={allDone ? 'default' : 'secondary'}
-            className={allDone ? 'bg-green-500 hover:bg-green-500' : ''}
+            className={allDone ? 'bg-emerald-500 hover:bg-emerald-500 text-white' : ''}
           >
             {completed} / {total}
           </Badge>
         </div>
         <Progress
           value={pct}
-          className={`h-1.5 ${allDone ? '[&>div]:bg-green-500' : ''}`}
+          className={`h-1.5 ${allDone ? '[&>div]:bg-emerald-500' : '[&>div]:bg-primary'}`}
         />
       </CardHeader>
 
@@ -96,7 +96,7 @@ export function ChecklistCard({ checklistId, title, items, completions, managerV
             <div
               key={item.id}
               className={`flex items-center gap-4 px-2 py-3 rounded-lg transition-colors cursor-pointer
-                ${isChecked ? 'opacity-60' : 'hover:bg-muted/40'}`}
+                ${isChecked ? 'opacity-50' : 'hover:bg-muted/50'}`}
               onClick={() => handleToggle(item.id)}
             >
               <Checkbox

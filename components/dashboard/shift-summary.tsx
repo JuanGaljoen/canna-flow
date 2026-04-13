@@ -21,7 +21,7 @@ export function ShiftSummary({ checklist, shiftLabel }: Props) {
   const nextTasks = remaining.slice(0, 3)
 
   return (
-    <Card className={allDone ? 'border-green-400' : ''}>
+    <Card className={allDone ? 'bg-emerald-50/30' : ''}>
       <CardContent className="p-5 space-y-4">
         {/* Header row */}
         <div className="flex items-center justify-between">
@@ -32,16 +32,16 @@ export function ShiftSummary({ checklist, shiftLabel }: Props) {
             </p>
           </div>
           {allDone ? (
-            <CheckCircle2 className="h-6 w-6 text-green-500" />
+            <CheckCircle2 className="h-6 w-6 text-emerald-500" />
           ) : (
-            <span className="text-2xl font-bold">{pct}%</span>
+            <span className="text-2xl font-bold tracking-tight">{pct}%</span>
           )}
         </div>
 
         {/* Progress bar */}
         <Progress
           value={pct}
-          className={`h-2 ${allDone ? '[&>div]:bg-green-500' : ''}`}
+          className={`h-2 ${allDone ? '[&>div]:bg-emerald-500' : '[&>div]:bg-primary'}`}
         />
 
         {/* Next tasks preview */}

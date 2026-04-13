@@ -14,6 +14,19 @@ interface Props {
   onEdit: (product: Product) => void
 }
 
+const CATEGORY_STYLES: Record<string, string> = {
+  flower:       'bg-emerald-50 text-emerald-700 border-emerald-200',
+  edibles:      'bg-amber-50 text-amber-700 border-amber-200',
+  concentrates: 'bg-orange-50 text-orange-700 border-orange-200',
+  'pre-rolls':  'bg-yellow-50 text-yellow-700 border-yellow-200',
+  accessories:  'bg-sky-50 text-sky-700 border-sky-200',
+  other:        'bg-zinc-50 text-zinc-600 border-zinc-200',
+}
+
+function categoryStyle(category: string) {
+  return CATEGORY_STYLES[category] ?? CATEGORY_STYLES.other
+}
+
 function stockVariant(level: number) {
   if (level <= 2) return 'destructive'
   if (level <= 10) return 'secondary'
@@ -50,9 +63,12 @@ export function ProductCard({ product, onEdit }: Props) {
         {/* Name + category */}
         <div className="flex items-start justify-between gap-2">
           <p className="font-semibold text-sm leading-tight">{product.name}</p>
-          <Badge variant="outline" className="capitalize shrink-0 text-xs">
+          <span className={cn(
+            'inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium border capitalize shrink-0',
+            categoryStyle(product.category)
+          )}>
             {product.category}
-          </Badge>
+          </span>
         </div>
 
         {/* THC / CBD */}

@@ -50,13 +50,13 @@ export function Header({ staff }: { staff: Staff[] }) {
   const selectedStaff = staff.find((m) => m.id === selectedStaffId)
 
   return (
-    <header className="h-16 border-b border-gray-200 bg-white flex items-center justify-between px-6 shrink-0">
+    <header className="h-16 border-b border-border bg-card flex items-center justify-between px-6 shrink-0">
       {/* Date / time */}
       <div className="text-sm text-muted-foreground">
         {now ? (
           <>
             <span className="font-medium text-foreground">{formatDate(now)}</span>
-            <span className="mx-2 text-gray-300">·</span>
+            <span className="mx-2 text-border">·</span>
             <span>{formatTime(now)}</span>
           </>
         ) : (
