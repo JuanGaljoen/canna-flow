@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 import { Sidebar } from '@/components/layout/sidebar'
 import { Header } from '@/components/layout/header'
 import type { Staff } from '@/types/database'
@@ -11,7 +11,7 @@ export default async function DashboardLayout({
   let staff: Staff[] = []
 
   try {
-    const supabase = createClient()
+    const supabase = createAdminClient()
     const { data } = await supabase
       .from('staff')
       .select('id, name, role, email, created_at')
