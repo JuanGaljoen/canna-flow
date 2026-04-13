@@ -1,6 +1,6 @@
 'use server'
 
-import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 import { revalidatePath } from 'next/cache'
 import type {
   ChecklistWithCompletions,
@@ -9,7 +9,7 @@ import type {
 
 /** All checklists with their items, ordered by shift then sort_order */
 export async function getChecklists(): Promise<ChecklistWithCompletions[]> {
-  const supabase = createClient()
+  const supabase = createAdminClient()
 
   const { data, error } = await supabase
     .from('checklists')
@@ -29,7 +29,7 @@ export async function getChecklists(): Promise<ChecklistWithCompletions[]> {
 
 /** Today's completions for a given checklist, with staff name joined */
 export async function getCompletionsForToday(checklistId: string) {
-  const supabase = createClient()
+  const supabase = createAdminClient()
   const today = new Date().toISOString().slice(0, 10)
 
   const { data, error } = await supabase
@@ -53,7 +53,7 @@ export async function toggleCompletion(
   checklistItemId: string,
   staffId: string
 ) {
-  const supabase = createClient()
+  const supabase = createAdminClient()
   const today = new Date().toISOString().slice(0, 10)
 
   // Check for existing completion today
@@ -86,7 +86,7 @@ export async function toggleCompletion(
 export async function getCompletionHistory(
   days = 7
 ): Promise<DailyHistoryRow[]> {
-  const supabase = createClient()
+  const supabase = createAdminClient()
 
   // Fetch all checklists with items to know totals per shift
   const { data: checklists } = await supabase
@@ -151,7 +151,7 @@ export async function getCompletionHistory(
 // ----------------------------------------------------------------
 
 async function getItemIdsForChecklist(checklistId: string): Promise<string[]> {
-  const supabase = createClient()
+  const supabase = createAdminClient()
   const { data } = await supabase
     .from('checklist_items')
     .select('id')
