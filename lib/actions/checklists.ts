@@ -2,6 +2,7 @@
 
 import { createAdminClient } from '@/lib/supabase/admin'
 import { revalidatePath } from 'next/cache'
+import { getSessionStaff } from '@/lib/actions/auth'
 import type {
   ChecklistWithCompletions,
   DailyHistoryRow,
@@ -49,10 +50,8 @@ export async function getCompletionsForToday(checklistId: string) {
 }
 
 /** Insert or delete a completion for today (toggle) */
-export async function toggleCompletion(
-  checklistItemId: string,
-  staffId: string
-) {
+export async function toggleCompletion(checklistItemId: string) {
+  const staff = await getSessionStaff()
   const supabase = createAdminClient()
   const today = new Date().toISOString().slice(0, 10)
 
@@ -75,7 +74,7 @@ export async function toggleCompletion(
       .from('checklist_completions')
       .insert({
         checklist_item_id: checklistItemId,
-        staff_id: staffId,
+        staff_id: staff.id,
         completed_date: today,
       })
     if (error) throw new Error(error.message)

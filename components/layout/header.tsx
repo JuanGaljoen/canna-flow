@@ -1,16 +1,10 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-} from '@/components/ui/select'
-import { User } from 'lucide-react'
+import { useEffect, useState, useTransition } from 'react'
+import { LogOut } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { signOut } from '@/lib/actions/auth'
 import type { Staff } from '@/types/database'
-
-export const STAFF_STORAGE_KEY = 'canna_ops_staff_id'
 
 function formatDate(date: Date) {
   return date.toLocaleDateString('en-ZA', {
@@ -29,25 +23,15 @@ function formatTime(date: Date) {
   })
 }
 
-export function Header({ staff }: { staff: Staff[] }) {
+export function Header({ staff }: { staff: Staff }) {
   const [now, setNow] = useState<Date | null>(null)
-  const [selectedStaffId, setSelectedStaffId] = useState<string>('')
+  const [isPending, startTransition] = useTransition()
 
   useEffect(() => {
     setNow(new Date())
-    const stored = localStorage.getItem(STAFF_STORAGE_KEY)
-    if (stored) setSelectedStaffId(stored)
-
     const timer = setInterval(() => setNow(new Date()), 60_000)
     return () => clearInterval(timer)
   }, [])
-
-  function handleSelect(value: string) {
-    setSelectedStaffId(value)
-    localStorage.setItem(STAFF_STORAGE_KEY, value)
-  }
-
-  const selectedStaff = staff.find((m) => m.id === selectedStaffId)
 
   return (
     <header className="h-16 border-b border-border bg-card flex items-center justify-between px-6 shrink-0">
@@ -60,31 +44,27 @@ export function Header({ staff }: { staff: Staff[] }) {
             <span>{formatTime(now)}</span>
           </>
         ) : (
-          <span className="text-gray-300">—</span>
+          <span className="text-border">—</span>
         )}
       </div>
 
-      {/* Staff selector — render name manually to avoid SelectValue showing UUID */}
-      <Select value={selectedStaffId} onValueChange={handleSelect}>
-        <SelectTrigger className="w-52 h-11 gap-2">
-          <User className="h-4 w-4 text-muted-foreground shrink-0" />
-          {selectedStaff ? (
-            <span className="font-medium truncate">{selectedStaff.name}</span>
-          ) : (
-            <span className="text-muted-foreground">Select staff…</span>
-          )}
-        </SelectTrigger>
-        <SelectContent>
-          {staff.map((member) => (
-            <SelectItem key={member.id} value={member.id} className="py-3">
-              <div className="flex flex-col">
-                <span className="font-medium">{member.name}</span>
-                <span className="text-xs text-muted-foreground capitalize">{member.role}</span>
-              </div>
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+      {/* Logged-in user + sign out */}
+      <div className="flex items-center gap-3">
+        <div className="text-right">
+          <p className="text-sm font-medium leading-tight">{staff.name}</p>
+          <p className="text-xs text-muted-foreground capitalize">{staff.role}</p>
+        </div>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-9 w-9 text-muted-foreground hover:text-foreground"
+          disabled={isPending}
+          onClick={() => startTransition(() => signOut())}
+          aria-label="Sign out"
+        >
+          <LogOut className="h-4 w-4" />
+        </Button>
+      </div>
     </header>
   )
 }

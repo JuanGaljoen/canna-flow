@@ -1,4 +1,4 @@
-export type Role = 'manager' | 'budtender'
+export type Role = 'owner' | 'manager' | 'budtender'
 export type Shift = 'morning' | 'evening'
 
 export interface Staff {
@@ -6,6 +6,8 @@ export interface Staff {
   name: string
   role: Role
   email: string
+  user_id: string | null
+  created_at: string
 }
 
 export interface Checklist {

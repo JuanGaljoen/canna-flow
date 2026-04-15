@@ -2,13 +2,14 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboard, ClipboardList, Package } from 'lucide-react'
+import { LayoutDashboard, ClipboardList, Package, Settings } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const NAV = [
   { label: 'Dashboard',  href: '/',           icon: LayoutDashboard },
   { label: 'Checklists', href: '/checklists',  icon: ClipboardList   },
   { label: 'Products',   href: '/products',    icon: Package         },
+  { label: 'Settings',   href: '/settings',    icon: Settings        },
 ]
 
 export function Sidebar() {
