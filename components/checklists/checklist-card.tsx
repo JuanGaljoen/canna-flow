@@ -7,7 +7,6 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Progress } from '@/components/ui/progress'
 import { Badge } from '@/components/ui/badge'
 import { toggleCompletion } from '@/lib/actions/checklists'
-import { STAFF_STORAGE_KEY } from '@/components/layout/header'
 import type { ChecklistItem, ChecklistCompletion } from '@/types/checklists'
 
 interface Props {
@@ -57,16 +56,11 @@ export function ChecklistCard({ checklistId, title, items, completions, managerV
   const allDone = pct === 100
 
   function handleToggle(itemId: string) {
-    const staffId = localStorage.getItem(STAFF_STORAGE_KEY)
-    if (!staffId) {
-      toast.warning('Select a staff member in the header first.')
-      return
-    }
     const isChecked = completionMap.has(itemId)
     startTransition(async () => {
       addOptimistic({ itemId, action: isChecked ? 'remove' : 'add' })
       try {
-        await toggleCompletion(itemId, staffId)
+        await toggleCompletion(itemId)
       } catch {
         toast.error('Failed to save. Please try again.')
       }
